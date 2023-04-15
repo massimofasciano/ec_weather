@@ -1,10 +1,10 @@
 ## ec_weather
 
-Get current weather conditions from Environment Canada from this site:
+Get current weather conditions from Environment Canada at this site:
 https://dd.weather.gc.ca/citypage_weather/xml/
 
-Data is parsed from XML and displayed either in plaintext (temperature or relative humidity) or as a
-JSON object containing the current conditions.
+Data is parsed from XML and displayed either in plaintext (temperature or relative humidity) or
+as a JSON object containing the current conditions.
 
 Most elements in the data structure use the Option type so it should deal with missing fields in the XML.
 In the JSON output they appear as null.
@@ -33,12 +33,12 @@ Options:
           [possible values: ab, bc, hef, mb, nb, nl, ns, nt, nu, on, pe, qc, sk, yt]
 
   -s, --station-id <STATION_ID>
-          The ID of the weather station ? see https://dd.weather.gc.ca/citypage_weather/xml/siteList.xml
+          The ID of the weather station see https://dd.weather.gc.ca/citypage_weather/xml/siteList.xml
 
           [default: s0000635]
 
   -l, --language <LANGUAGE>
-          The language of text info in the XML data ? (currently only affects text summary of date)
+          The language of text info in the XML data (currently only affects text summary of date)
 
           [default: english]
 

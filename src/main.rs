@@ -51,12 +51,12 @@ pub struct Args {
     #[arg(short, long, default_value = "qc", conflicts_with="url")]
     pub province: Province,
 
-    /// The ID of the weather station ?
+    /// The ID of the weather station
     /// see https://dd.weather.gc.ca/citypage_weather/xml/siteList.xml
     #[arg(short, long, default_value = "s0000635", conflicts_with="url")]
     pub station_id: String,
 
-    /// The language of text info in the XML data ? (currently only affects text summary of date)
+    /// The language of text info in the XML data (currently only affects text summary of date)
     #[arg(value_enum, short, long, default_value = "english", conflicts_with="url")]
     pub language: Language,
 }
