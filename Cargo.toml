@@ -3,7 +3,7 @@ name = "ec_weather"
 version = "0.2.0"
 edition = "2021"
 authors = ["Massimo Fasciano <massimo@mafalitic.com>"]
-description = "Get current weather conditions from  Environment Canada"
+description = "Get current weather conditions from Environment Canada"
 
 [dependencies]
 anyhow = "1.0.70"

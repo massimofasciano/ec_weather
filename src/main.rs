@@ -75,22 +75,24 @@ struct WeatherData {
 
 #[derive(Debug, Serialize, Deserialize)]
 struct CurrentConditions {
-    temperature: Temperature,
-    dewpoint: Dewpoint,
-    humidex: Humidex,
-    pressure: Pressure,
-    visibility: Visibility,
+    temperature: Option<Temperature>,
+    dewpoint: Option<Dewpoint>,
+    humidex: Option<Humidex>,
+    pressure: Option<Pressure>,
+    visibility: Option<Visibility>,
+    #[serde(rename = "windChill")]
+    wind_chill: Option<WindChill>,
     #[serde(rename = "relativeHumidity")]
-    relative_humidity: RelativeHumidity,
+    relative_humidity: Option<RelativeHumidity>,
     #[serde(rename = "dateTime")]
     date_time: Vec<DateTime>, 
 }
 
-#[duplicate_item(Measurement; [Temperature]; [Dewpoint]; [Humidex]; [Pressure]; [Visibility]; [RelativeHumidity])]
+#[duplicate_item(Measurement; [Temperature]; [Dewpoint]; [Humidex]; [Pressure]; [Visibility]; [RelativeHumidity]; [WindChill])]
 #[derive(Debug, Serialize, Deserialize)]
 struct Measurement {
     #[serde(rename(deserialize = "$value"))]
-    value: f64,
+    value: Option<f64>,
     #[serde(rename = "unitType")]
     unit_type: Option<String>,
     units: Option<String>,
@@ -134,9 +136,9 @@ fn get_weather(args: &Args) -> Result<WeatherData,anyhow::Error> {
 fn display_weather(args: &Args) -> Result<(),anyhow::Error> {
     let weather_data = get_weather(&args)?;
     if args.temperature_only {
-        println!("{}",weather_data.current_conditions.temperature.value);
+        println!("{}",weather_data.current_conditions.temperature.unwrap().value.unwrap());
     } else if args.relative_humidity_only {
-        println!("{}",weather_data.current_conditions.relative_humidity.value);
+        println!("{}",weather_data.current_conditions.relative_humidity.unwrap().value.unwrap());
     } else {
         let json = serde_json::to_string(&weather_data.current_conditions)?;
         println!("{}",json);
