@@ -136,20 +136,32 @@ fn get_weather(args: &Args) -> Result<WeatherData,anyhow::Error> {
 fn display_weather(args: &Args) -> Result<(),anyhow::Error> {
     let weather_data = get_weather(&args)?;
     if args.temperature_only {
-        println!("{}",weather_data.current_conditions.temperature.unwrap().value.unwrap());
+        if let Some(temperature) = weather_data.current_conditions.temperature {
+            if let Some(temperature_value) = temperature.value {
+                println!("{}",temperature_value);
+                return Ok(());
+            }
+        }
+        Err(anyhow!("Temperature not available"))
     } else if args.relative_humidity_only {
-        println!("{}",weather_data.current_conditions.relative_humidity.unwrap().value.unwrap());
+        if let Some(relative_humidity) = weather_data.current_conditions.relative_humidity {
+            if let Some(relative_humidity_value) = relative_humidity.value {
+                println!("{}",relative_humidity_value);
+                return Ok(());
+            }
+        }
+        Err(anyhow!("Relative humidity not available"))
     } else {
         let json = serde_json::to_string(&weather_data.current_conditions)?;
         println!("{}",json);
+        Ok(())
     }
-    Ok(())
 }
 
 fn main() {
     let args = Args::new();
     if let Err(e) = display_weather(&args) {
         println!("{{\"error\":\"{}\"}}",e);
-        std::process::exit(1)
+        std::process::exit(1);
     }
 }

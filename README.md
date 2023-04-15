@@ -6,6 +6,9 @@ https://dd.weather.gc.ca/citypage_weather/xml/
 Data is parsed from XML and displayed either in plaintext (temperature or relative humidity) or as a
 JSON object containing the current conditions.
 
+Most elements in the data structure use the Option type so it should deal with missing fields in the XML.
+In the JSON output they appear as null.
+
 ```
 $ ec_weather --help
 
