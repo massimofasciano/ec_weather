@@ -6,47 +6,47 @@ use chrono::TimeZone;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WeatherData {
     #[serde(rename = "currentConditions")]
-    pub current_conditions: CurrentConditions,
+    current_conditions: CurrentConditions,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct CurrentConditions {
+struct CurrentConditions {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub temperature: Option<Measurement>,
+    temperature: Option<Measurement>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub dewpoint: Option<Measurement>,
+    dewpoint: Option<Measurement>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub humidex: Option<Measurement>,
+    humidex: Option<Measurement>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub pressure: Option<Measurement>,
+    pressure: Option<Measurement>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub visibility: Option<Measurement>,
+    visibility: Option<Measurement>,
     #[serde(rename = "windChill")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub wind_chill: Option<Measurement>,
+    wind_chill: Option<Measurement>,
     #[serde(rename = "relativeHumidity")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub relative_humidity: Option<Measurement>,
+    relative_humidity: Option<Measurement>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub wind: Option<Wind>,
+    wind: Option<Wind>,
     #[serde(rename = "dateTime")]
     #[serde(skip_serializing_if = "Vec::is_empty")]
-    pub date_time_xml: Vec<DateTimeXML>, 
+    date_time_xml: Vec<DateTimeXML>, 
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(skip_deserializing)]
-    pub timestamp: Option<chrono::DateTime<chrono::Utc>>,
+    timestamp: Option<chrono::DateTime<chrono::Utc>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Wind {
+struct Wind {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub speed: Option<Measurement>,
+    speed: Option<Measurement>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub gust: Option<Measurement>,
+    gust: Option<Measurement>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub direction: Option<String>,
+    direction: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub bearing: Option<Measurement>,
+    bearing: Option<Measurement>,
 }
 
 #[derive(Debug, Deserialize, Display)]
@@ -81,31 +81,31 @@ impl Serialize for Stringf64 {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Measurement {
+struct Measurement {
     #[serde(rename(deserialize = "$value"))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Stringf64>,
+    value: Option<Stringf64>,
     #[serde(rename = "unitType")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub unit_type: Option<String>,
+    unit_type: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub units: Option<String>,
+    units: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct DateTimeXML {
+struct DateTimeXML {
     // attributes
     #[serde(rename = "UTCOffset")]
-    pub utc_offset: i32,
-    pub zone: String,
+    utc_offset: i32,
+    zone: String,
     // tags
-    pub year: i32,
-    pub month: u32,
-    pub day: u32,
-    pub hour: u32,
-    pub minute: u32,
+    year: i32,
+    month: u32,
+    day: u32,
+    hour: u32,
+    minute: u32,
     #[serde(rename = "textSummary")]
-    pub text_summary: String,
+    text_summary: String,
 }
 
 impl WeatherData {
@@ -143,6 +143,9 @@ impl WeatherData {
             }
         }
         Err(anyhow!("Relative Humidity not available"))
+    }
+    pub fn to_json(&self) -> Result<String,anyhow::Error> {
+        Ok(serde_json::to_string(&self.current_conditions)?)
     }
 }
 
