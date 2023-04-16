@@ -1,10 +1,13 @@
 use anyhow::anyhow;
-// use serde_json::json;
 
 mod args;
-// mod weather_data;
-// use weather_data::WeatherData;
+#[cfg(not(feature="data_json"))]
+mod weather_data;
+#[cfg(not(feature="data_json"))]
+use weather_data::WeatherData;
+#[cfg(feature="data_json")]
 mod weather_data_json;
+#[cfg(feature="data_json")]
 use weather_data_json::WeatherData;
 mod error;
 

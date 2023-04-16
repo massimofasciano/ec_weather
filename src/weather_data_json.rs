@@ -1,7 +1,7 @@
 use anyhow::anyhow;
-// use chrono::TimeZone;
 use serde_json::json;
 
+#[derive(Debug)]
 pub struct WeatherData {
     json_value : serde_json::value::Value,
 }
