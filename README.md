@@ -6,8 +6,13 @@ https://dd.weather.gc.ca/citypage_weather/xml/
 Data is parsed from XML and displayed either in plaintext (temperature or relative humidity) or
 as a JSON object containing the current conditions.
 
+Intermediate Rust data structures are used to deserialize from XML and then serialize to JSON.
+
 Most elements in the data structure use the Option type so it should deal with missing fields in the XML.
-In the JSON output they appear as null.
+
+This version has a proper command line interface and processes the data during processing.
+A simpler version without this processing is available here:
+https://github.com/massimofasciano/ec_weather_simple
 
 ```
 $ ec_weather --help
@@ -64,59 +69,71 @@ $ ec_weather -r
 
 $ ec_weather -p on -s s0000073 -l french
 {
-   "pressure" : {
-      "value" : 101.3,
-      "unitType" : "metric",
-      "units" : "kPa"
-   },
-   "temperature" : {
-      "unitType" : "metric",
-      "units" : "C",
-      "value" : 14.3
-   },
-   "windChill" : {
-      "value" : -1,
-      "unitType" : "metric",
-      "units" : null
-   },
-   "humidex" : null,
-   "relativeHumidity" : {
-      "value" : 50,
-      "unitType" : null,
-      "units" : "%"
-   },
    "dewpoint" : {
-      "value" : 4,
       "unitType" : "metric",
+      "value" : 1.2,
       "units" : "C"
    },
-   "visibility" : {
+   "wind" : {
+      "direction" : "E",
+      "gust" : {
+         "units" : "km/h",
+         "unitType" : "metric"
+      },
+      "bearing" : {
+         "value" : 95.7,
+         "units" : "degrees"
+      },
+      "speed" : {
+         "units" : "km/h",
+         "value" : 2,
+         "unitType" : "metric"
+      }
+   },
+   "relativeHumidity" : {
+      "value" : 86,
+      "units" : "%"
+   },
+   "pressure" : {
+      "value" : 101.1,
+      "units" : "kPa",
+      "unitType" : "metric"
+   },
+   "windChill" : {
       "unitType" : "metric",
+      "value" : -1
+   },
+   "visibility" : {
       "units" : "km",
-      "value" : null
+      "unitType" : "metric"
    },
    "dateTime" : [
       {
+         "minute" : 0,
          "year" : 2023,
          "UTCOffset" : 0,
-         "minute" : 0,
+         "textSummary" : "16 avril 2023 03h00 UTC",
+         "hour" : 3,
          "zone" : "UTC",
          "month" : 4,
-         "day" : 15,
-         "textSummary" : "15 avril 2023 14h00 UTC",
-         "hour" : 14
+         "day" : 16
       },
       {
-         "year" : 2023,
-         "minute" : 0,
-         "UTCOffset" : -5,
-         "zone" : "HNE",
          "month" : 4,
          "day" : 15,
-         "textSummary" : "15 avril 2023 09h00 HNE",
-         "hour" : 9
+         "minute" : 0,
+         "year" : 2023,
+         "textSummary" : "15 avril 2023 22h00 HNE",
+         "UTCOffset" : -5,
+         "hour" : 22,
+         "zone" : "HNE"
       }
-   ]
+   ],
+   "temperature" : {
+      "unitType" : "metric",
+      "units" : "C",
+      "value" : 3.4
+   }
 }
 
 $ ec_weather -p bc -s s0000873
