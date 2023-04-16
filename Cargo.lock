@@ -263,7 +263,7 @@ dependencies = [
 
 [[package]]
 name = "ec_weather"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -272,6 +272,7 @@ dependencies = [
  "openssl",
  "reqwest",
  "serde",
+ "serde-error",
  "serde-xml-rs",
  "serde_json",
 ]
@@ -942,6 +943,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bb2f3770c8bce3bcda7e149193a069a0f4365bda1fa5cd88e03bca26afc1216c"
 dependencies = [
  "serde_derive",
+]
+
+[[package]]
+name = "serde-error"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e988182713aeed6a619a88bca186f6d6407483485ffe44c869ee264f8eabd13f"
+dependencies = [
+ "serde",
 ]
 
 [[package]]

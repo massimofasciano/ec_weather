@@ -1,6 +1,6 @@
 [package]
 name = "ec_weather"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
 authors = ["Massimo Fasciano <massimo@mafalitic.com>"]
 description = "Get current weather conditions from Environment Canada"
@@ -12,6 +12,7 @@ clap = { version = "4.2.2", features = ["derive"]}
 derive_more = "0.99.17"
 reqwest = { version = "0.11.16", features = ["blocking"] }
 serde = { version = "1.0.160", features = ["derive"] }
+serde-error = "0.1.2"
 serde-xml-rs = "0.6.0"
 serde_json = "1.0.96"
 
