@@ -7,8 +7,8 @@ Data is parsed from XML and displayed either in plaintext (temperature or relati
 as a JSON object containing the current conditions.
 
 Intermediate Rust data structures are used to deserialize from XML and then serialize to JSON.
-
 Most elements in the data structure use the Option type so it should deal with missing fields in the XML.
+The XML date is converted into an rfc3339 timestamp (ex: 2023-04-16T03:00:00Z).
 
 This version has a proper command line interface and processes the data during processing.
 A simpler version without this processing is available here:

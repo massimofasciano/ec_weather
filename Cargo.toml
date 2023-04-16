@@ -7,6 +7,7 @@ description = "Get current weather conditions from Environment Canada"
 
 [dependencies]
 anyhow = "1.0.70"
+chrono = { version = "0.4.24", features = ["serde"] }
 clap = { version = "4.2.2", features = ["derive"]}
 derive_more = "0.99.17"
 reqwest = { version = "0.11.16", features = ["blocking"] }

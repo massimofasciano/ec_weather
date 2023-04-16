@@ -2,6 +2,7 @@ use anyhow::anyhow;
 use serde::{Deserialize, Serialize};
 use clap::{Parser, ValueEnum};
 use derive_more::Display;
+use chrono::TimeZone;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Display)]
 pub enum Language {
@@ -94,7 +95,10 @@ struct CurrentConditions {
     wind: Option<Wind>,
     #[serde(rename = "dateTime")]
     #[serde(skip_serializing_if = "Vec::is_empty")]
-    date_time: Vec<DateTime>, 
+    date_time_xml: Vec<DateTimeXML>, 
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_deserializing)]
+    timestamp: Option<chrono::DateTime<chrono::Utc>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -122,17 +126,17 @@ struct Measurement {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct DateTime {
+struct DateTimeXML {
     // attributes
     #[serde(rename = "UTCOffset")]
-    utc_offset: i8,
+    utc_offset: i32,
     zone: String,
     // tags
-    year: u16,
-    month: u8,
-    day: u8,
-    hour: u8,
-    minute: u8,
+    year: i32,
+    month: u32,
+    day: u32,
+    hour: u32,
+    minute: u32,
     #[serde(rename = "textSummary")]
     text_summary: String,
 }
@@ -149,7 +153,16 @@ fn get_weather(args: &Args) -> Result<WeatherData,anyhow::Error> {
     let response = reqwest::blocking::get(&url)?;
     if response.status().is_success() {
         let xml = response.text()?;
-        let weather_data = serde_xml_rs::from_str::<WeatherData>(&xml)?;
+        let mut weather_data = serde_xml_rs::from_str::<WeatherData>(&xml)?;
+        weather_data.current_conditions.timestamp = None;
+        for d in &weather_data.current_conditions.date_time_xml {
+            weather_data.current_conditions.timestamp = 
+                Some(chrono::FixedOffset::east_opt(d.utc_offset*60*60).unwrap()
+                    .with_ymd_and_hms(d.year, d.month, d.day, d.hour, d.minute, 0).unwrap()
+                    .with_timezone(&chrono::Utc)
+                );
+        }
+        weather_data.current_conditions.date_time_xml = vec![];
         Ok(weather_data)
     } else {
         Err(anyhow!("Failed to fetch weather data for {} with status: {}",url,response.status()))
