@@ -9,7 +9,6 @@ description = "Get current weather conditions from Environment Canada"
 anyhow = "1.0.70"
 clap = { version = "4.2.2", features = ["derive"]}
 derive_more = "0.99.17"
-duplicate = "1.0.0"
 reqwest = { version = "0.11.16", features = ["blocking"] }
 serde = { version = "1.0.160", features = ["derive"] }
 serde-xml-rs = "0.6.0"

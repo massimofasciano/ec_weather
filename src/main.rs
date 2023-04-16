@@ -1,5 +1,4 @@
 use anyhow::anyhow;
-use duplicate::duplicate_item;
 use serde::{Deserialize, Serialize};
 use clap::{Parser, ValueEnum};
 use derive_more::Display;
@@ -75,26 +74,50 @@ struct WeatherData {
 
 #[derive(Debug, Serialize, Deserialize)]
 struct CurrentConditions {
-    temperature: Option<Temperature>,
-    dewpoint: Option<Dewpoint>,
-    humidex: Option<Humidex>,
-    pressure: Option<Pressure>,
-    visibility: Option<Visibility>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    temperature: Option<Measurement>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    dewpoint: Option<Measurement>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    humidex: Option<Measurement>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pressure: Option<Measurement>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    visibility: Option<Measurement>,
     #[serde(rename = "windChill")]
-    wind_chill: Option<WindChill>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    wind_chill: Option<Measurement>,
     #[serde(rename = "relativeHumidity")]
-    relative_humidity: Option<RelativeHumidity>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    relative_humidity: Option<Measurement>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    wind: Option<Wind>,
     #[serde(rename = "dateTime")]
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     date_time: Vec<DateTime>, 
 }
 
-#[duplicate_item(Measurement; [Temperature]; [Dewpoint]; [Humidex]; [Pressure]; [Visibility]; [RelativeHumidity]; [WindChill])]
+#[derive(Debug, Serialize, Deserialize)]
+struct Wind {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    speed: Option<Measurement>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    gust: Option<Measurement>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    direction: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    bearing: Option<Measurement>,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 struct Measurement {
     #[serde(rename(deserialize = "$value"))]
+    #[serde(skip_serializing_if = "Option::is_none")]
     value: Option<f64>,
     #[serde(rename = "unitType")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     unit_type: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     units: Option<String>,
 }
 
