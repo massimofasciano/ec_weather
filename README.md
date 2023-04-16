@@ -10,8 +10,12 @@ Intermediate Rust data structures are used to deserialize from XML and then seri
 Most elements in the data structure use the Option type so it should deal with missing fields in the XML.
 The XML date is converted into a UTC rfc3339 timestamp (ex: 2023-04-16T03:00:00Z).
 
-This version has a proper command line interface and processes the data during processing.
-A simpler version without this processing is available here:
+An optional build feature named data_json will compile a deserializer into serde_json::value::Value instead
+of custom data structures. The timestamp conversion is not implemented in this mode but the rest of the features
+stay the same.
+
+This program has a proper command line interface and transforms the data during processing
+but a simpler version without this processing is available here:
 https://github.com/massimofasciano/ec_weather_simple
 
 ```
