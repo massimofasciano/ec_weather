@@ -8,7 +8,7 @@ as a JSON object containing the current conditions.
 
 Intermediate Rust data structures are used to deserialize from XML and then serialize to JSON.
 Most elements in the data structure use the Option type so it should deal with missing fields in the XML.
-The XML date is converted into an rfc3339 timestamp (ex: 2023-04-16T03:00:00Z).
+The XML date is converted into a UTC rfc3339 timestamp (ex: 2023-04-16T03:00:00Z).
 
 This version has a proper command line interface and processes the data during processing.
 A simpler version without this processing is available here:
@@ -58,7 +58,7 @@ Options:
           Print version
 ```
 
-Some examples:
+Some examples (the code dealt with missing values in the XML):
 
 ```
 $ ec_weather -t
@@ -70,69 +70,48 @@ $ ec_weather -r
 $ ec_weather -p on -s s0000073 -l french
 {
    "dewpoint" : {
+      "value" : -0.2,
       "unitType" : "metric",
-      "value" : 1.2,
       "units" : "C"
    },
+   "windChill" : {
+      "value" : -1,
+      "unitType" : "metric"
+   },
    "wind" : {
-      "direction" : "E",
+      "speed" : {
+         "value" : 2,
+         "unitType" : "metric",
+         "units" : "km/h"
+      },
+      "bearing" : {
+         "value" : 121.9,
+         "units" : "degrees"
+      },
       "gust" : {
          "units" : "km/h",
          "unitType" : "metric"
       },
-      "bearing" : {
-         "value" : 95.7,
-         "units" : "degrees"
-      },
-      "speed" : {
-         "units" : "km/h",
-         "value" : 2,
-         "unitType" : "metric"
-      }
-   },
-   "relativeHumidity" : {
-      "value" : 86,
-      "units" : "%"
-   },
-   "pressure" : {
-      "value" : 101.1,
-      "units" : "kPa",
-      "unitType" : "metric"
-   },
-   "windChill" : {
-      "unitType" : "metric",
-      "value" : -1
+      "direction" : "ESE"
    },
    "visibility" : {
       "units" : "km",
       "unitType" : "metric"
    },
-   "dateTime" : [
-      {
-         "minute" : 0,
-         "year" : 2023,
-         "UTCOffset" : 0,
-         "textSummary" : "16 avril 2023 03h00 UTC",
-         "hour" : 3,
-         "zone" : "UTC",
-         "month" : 4,
-         "day" : 16
-      },
-      {
-         "month" : 4,
-         "day" : 15,
-         "minute" : 0,
-         "year" : 2023,
-         "textSummary" : "15 avril 2023 22h00 HNE",
-         "UTCOffset" : -5,
-         "hour" : 22,
-         "zone" : "HNE"
-      }
-   ],
+   "relativeHumidity" : {
+      "units" : "%",
+      "value" : 90
+   },
    "temperature" : {
+      "value" : 1.2,
       "unitType" : "metric",
-      "units" : "C",
-      "value" : 3.4
+      "units" : "C"
+   },
+   "timestamp" : "2023-04-16T06:00:00Z",
+   "pressure" : {
+      "value" : 101.1,
+      "units" : "kPa",
+      "unitType" : "metric"
    }
 }
 

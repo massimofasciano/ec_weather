@@ -113,11 +113,42 @@ struct Wind {
     bearing: Option<Measurement>,
 }
 
+#[derive(Debug, Deserialize, Display)]
+#[serde(untagged)]
+enum Stringf64 {
+    Number(f64),
+    Text(String),
+}
+
+// Custom serializer to deal with strings in the XML where we expect floats.
+// We deserialize as custom Stringf64 and then convert to f64 when
+// serializing to JSON.
+impl Serialize for Stringf64 {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use Stringf64::*;
+        match self {
+            Text(txt) => {
+                if let Ok(flt) = txt.parse::<f64>() {
+                    serializer.serialize_f64(flt)
+                } else {
+                    serializer.serialize_str(txt)
+                }
+            }
+            Number(flt) => {
+                serializer.serialize_f64(*flt)
+            }
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 struct Measurement {
     #[serde(rename(deserialize = "$value"))]
     #[serde(skip_serializing_if = "Option::is_none")]
-    value: Option<f64>,
+    value: Option<Stringf64>,
     #[serde(rename = "unitType")]
     #[serde(skip_serializing_if = "Option::is_none")]
     unit_type: Option<String>,
