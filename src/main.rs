@@ -1,11 +1,15 @@
 use anyhow::anyhow;
+// use serde_json::json;
 
 mod args;
-mod weather_data;
+// mod weather_data;
+// use weather_data::WeatherData;
+mod weather_data_json;
+use weather_data_json::WeatherData;
 mod error;
 
 fn display_weather(args: &args::Args) -> Result<(),anyhow::Error> {
-    let weather_data = weather_data::WeatherData::new(args.url.as_ref().ok_or(anyhow!("no url in args"))?)?;
+    let weather_data = WeatherData::new(args.url.as_ref().ok_or(anyhow!("no url in args"))?)?;
     if args.temperature_only {
         println!("{}",weather_data.get_temperature()?);
     } else if args.relative_humidity_only {
@@ -15,6 +19,8 @@ fn display_weather(args: &args::Args) -> Result<(),anyhow::Error> {
     }
     Ok(())
 }
+
+
 
 fn main() {
     let args = args::Args::new();
